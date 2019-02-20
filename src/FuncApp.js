@@ -6,17 +6,6 @@ const App = () => {
     const [newTodos, setNewTodos] = useState([]);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-    useEffect(() => {
-        const handleResize = () => setWindowWidth(window.innerWidth);
-        window.addEventListener('resize', handleResize);
-        fetchTodos();
-        document.title = `you have ${todoList.length} things to do`;
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [todoList.length, newTodos]);
-
     const fetchTodos = async () => {
         try {
             const res = await fetch(URL);
@@ -29,6 +18,18 @@ const App = () => {
         }
     };
 
+    const handleResize = () => setWindowWidth(window.innerWidth);
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        fetchTodos();
+        document.title = `you have ${todoList.length} things to do`;
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [todoList.length, newTodos]);
+
     const device = () => {
         if (windowWidth < 480) {
             return 'phone';
@@ -38,6 +39,12 @@ const App = () => {
             return 'desktop';
         }
     };
+
+    /*
+    |--------------------------------------------------------------------------
+    | PREV STUFF
+    |--------------------------------------------------------------------------
+    */
 
     const handleAddTodo = todo => {
         // setTodoList([...todoList, todo]);
