@@ -3,7 +3,7 @@ import { URL } from './config';
 
 const App = () => {
     const [todoList, setTodoList] = useState([]);
-    const [newTodos, setNewTodos] = useState([]);
+    const [newTodo, setNewTodo] = useState('');
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const fetchTodos = async () => {
@@ -18,17 +18,19 @@ const App = () => {
         }
     };
 
+    useEffect(() => {
+        fetchTodos();
+        document.title = `you have ${todoList.length} things to do`;
+    }, [todoList.length, newTodo]);
+
     const handleResize = () => setWindowWidth(window.innerWidth);
 
     useEffect(() => {
         window.addEventListener('resize', handleResize);
-        fetchTodos();
-        document.title = `you have ${todoList.length} things to do`;
-
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [todoList.length, newTodos]);
+    });
 
     const device = () => {
         if (windowWidth < 480) {
@@ -55,7 +57,7 @@ const App = () => {
             .then(res => res.json)
             .catch(err => console.error(err));
 
-        setNewTodos([...newTodos, todo]);
+        setNewTodo([...newTodo, todo]);
     };
 
     const handleDeleteTodo = todoToDelete => {
